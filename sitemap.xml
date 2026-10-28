@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PLACEHOLDER DOMAIN: replace every https://www.example.com with your final domain.
+  Add privacy.html and terms.html here once their real text is published
+  (and remove the noindex tag from those pages at the same time).
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.example.com/</loc>
+    <lastmod>2026-10-28</lastmod>
+  </url>
+</urlset>

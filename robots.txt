@@ -1,0 +1,7 @@
+# robots.txt for Nexora
+# Replace https://www.example.com with your final domain before launch.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.example.com/sitemap.xml

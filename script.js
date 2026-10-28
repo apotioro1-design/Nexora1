@@ -8,7 +8,7 @@
    ============================================================= */
 const SITE_CONFIG = {
   // Public contact email, e.g. 'hello@yourdomain.com'
-  contactEmail: '',
+  contactEmail: 'https://formspree.io/f/mnppvynn',
 
   // Booking page, e.g. 'https://calendly.com/your-name/discovery-call'
   // When set, every "Book a Demo" button opens it in a new tab.
@@ -23,7 +23,7 @@ const SITE_CONFIG = {
 
   // Form backend URL that accepts a POST, e.g. 'https://formspree.io/f/abcdwxyz'
   // or '/api/contact' if you add a Cloudflare Pages Function. See README.md.
-  formEndpoint: ''
+  formEndpoint: 'https://formspree.io/f/mnppvynn'
 };
 
 /* ============================================================= */

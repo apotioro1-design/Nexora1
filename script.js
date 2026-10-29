@@ -151,42 +151,117 @@ const SITE_CONFIG = {
     }
   }
 
-  /* ---------- Transcript playback (text only, clearly a sample) ---------- */
-  const replayBtn = $('#replay-transcript');
-  const transcript = $('#transcript');
-  if (replayBtn && transcript) {
-    const lines = $$('li', transcript);
-    const label = $('span', replayBtn);
-    let timerId = null;
+ 
+/* ---------- Transcript playback synchronized with audio ---------- */
+const replayBtn = $('#replay-transcript');
+const transcript = $('#transcript');
 
-    const stop = () => {
-      clearTimeout(timerId);
-      timerId = null;
-      transcript.classList.remove('is-playing');
-      lines.forEach(l => l.classList.remove('is-shown'));
+if (replayBtn && transcript) {
+  const lines = $$('li', transcript);
+  const label = $('span', replayBtn);
+
+  // Audio file is stored in the root of the website.
+  const transcriptAudio = new Audio('/riverbend-demo.mp3');
+  let activeIndex = -1;
+
+  const getStartTime = line => {
+    const timeLabel = $('.t-time', line);
+    const parts = (timeLabel ? timeLabel.textContent.trim() : '0:00')
+      .split(':')
+      .map(Number);
+
+    return parts.length === 2
+      ? parts[0] * 60 + parts[1]
+      : 0;
+  };
+
+  const startTimes = lines.map(getStartTime);
+
+  const resetTranscript = () => {
+    lines.forEach(line => {
+      line.classList.remove('is-shown', 'is-active');
+    });
+    transcript.classList.remove('is-playing');
+    label.textContent = 'Play transcript';
+    replayBtn.setAttribute('aria-pressed', 'false');
+    activeIndex = -1;
+  };
+
+  const syncTranscript = () => {
+    const time = transcriptAudio.currentTime;
+    let nextIndex = -1;
+
+    for (let i = 0; i < startTimes.length; i++) {
+      if (time >= startTimes[i]) {
+        nextIndex = i;
+      } else {
+        break;
+      }
+    }
+
+    if (nextIndex === activeIndex) return;
+
+    activeIndex = nextIndex;
+
+    lines.forEach((line, index) => {
+      line.classList.toggle('is-active', index === activeIndex);
+      line.classList.toggle('is-shown', index <= activeIndex);
+    });
+
+    if (activeIndex >= 0) {
+      const line = lines[activeIndex];
+      const top = line.offsetTop - transcript.offsetTop - 16;
+
+      transcript.scrollTo({
+        top: Math.max(0, top),
+        behavior: reduceMotion ? 'auto' : 'smooth'
+      });
+    }
+  };
+
+  replayBtn.setAttribute('aria-pressed', 'false');
+
+  replayBtn.addEventListener('click', async () => {
+    if (!transcriptAudio.paused) {
+      transcriptAudio.pause();
+      return;
+    }
+
+    if (transcriptAudio.ended) {
+      transcriptAudio.currentTime = 0;
+    }
+
+    transcript.classList.add('is-playing');
+    label.textContent = 'Pause transcript';
+    replayBtn.setAttribute('aria-pressed', 'true');
+
+    try {
+      await transcriptAudio.play();
+      syncTranscript();
+    } catch (error) {
       label.textContent = 'Play transcript';
       replayBtn.setAttribute('aria-pressed', 'false');
-    };
+      console.error('Could not play demo audio:', error);
+    }
+  });
 
-    const step = i => {
-      if (i >= lines.length) { timerId = setTimeout(stop, 1500); return; }
-      lines[i].classList.add('is-shown');
-      const top = lines[i].offsetTop - transcript.offsetTop - 16;
-      transcript.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? 'auto' : 'smooth' });
-      const words = lines[i].querySelector('p').textContent.split(/\s+/).length;
-      timerId = setTimeout(() => step(i + 1), Math.min(4200, 700 + words * 140));
-    };
+  transcriptAudio.addEventListener('timeupdate', syncTranscript);
 
+  transcriptAudio.addEventListener('play', () => {
+    transcript.classList.add('is-playing');
+    label.textContent = 'Pause transcript';
+    replayBtn.setAttribute('aria-pressed', 'true');
+  });
+
+  transcriptAudio.addEventListener('pause', () => {
+    label.textContent = 'Play transcript';
     replayBtn.setAttribute('aria-pressed', 'false');
-    replayBtn.addEventListener('click', () => {
-      if (timerId) { stop(); return; }
-      transcript.classList.add('is-playing');
-      label.textContent = 'Stop';
-      replayBtn.setAttribute('aria-pressed', 'true');
-      transcript.scrollTo({ top: 0 });
-      step(0);
-    });
-  }
+  });
+
+  transcriptAudio.addEventListener('ended', resetTranscript);
+
+  transcriptAudio.addEventListener('seeked', syncTranscript);
+}
 
   /* ---------- Contact form ---------- */
   const form = $('#contact-form');

@@ -160,11 +160,16 @@ if (replayBtn && transcript) {
   const lines = $$('li', transcript);
   const label = $('span', replayBtn);
 
-  // Audio file is stored in the root of the website.
-  const transcriptAudio = new Audio('/riverbend-demo.mp3');
+  // Audio file is stored in the root of the website. It downloads only when Play is pressed.
+  const transcriptAudio = new Audio();
+  transcriptAudio.preload = 'none';
+  transcriptAudio.src = '/riverbend-demo.mp3';
   let activeIndex = -1;
 
   const getStartTime = line => {
+    // Prefer the precise data-start (seconds); fall back to the m:ss label.
+    const precise = parseFloat(line.dataset.start);
+    if (!isNaN(precise)) return precise;
     const timeLabel = $('.t-time', line);
     const parts = (timeLabel ? timeLabel.textContent.trim() : '0:00')
       .split(':')
@@ -239,8 +244,9 @@ if (replayBtn && transcript) {
       await transcriptAudio.play();
       syncTranscript();
     } catch (error) {
-      label.textContent = 'Play transcript';
-      replayBtn.setAttribute('aria-pressed', 'false');
+      // Pausing while it's still loading isn't a failure.
+      if (error && error.name === 'AbortError') return;
+      resetTranscript();
       console.error('Could not play demo audio:', error);
     }
   });

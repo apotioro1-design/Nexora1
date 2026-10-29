@@ -19,7 +19,7 @@ const SITE_CONFIG = {
   demoPhoneNumber: '',
 
   // Recorded sample call, e.g. 'assets/sample-call.mp3' (keep it under ~2 MB).
-  demoAudioUrl: '',
+  demoAudioUrl: 'riverbend-demo.mp3',
 
   // Form backend URL that accepts a POST, e.g. 'https://formspree.io/f/abcdwxyz'
   // or '/api/contact' if you add a Cloudflare Pages Function. See README.md.

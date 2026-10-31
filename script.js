@@ -20,7 +20,7 @@ const SITE_CONFIG = {
   demoAudioUrl: 'riverbend-demo.mp3',
 
   // Formspree endpoint
-  formEndpoint: 'https://formspree.io/f/xkjjvlra'
+formEndpoint: 'https://formspree.io/f/xkjjvlra'
 };
 
 /* ============================================================= */

@@ -7,23 +7,20 @@
    honestly instead of showing a broken button.
    ============================================================= */
 const SITE_CONFIG = {
-  // Public contact email, e.g. 'hello@yourdomain.com'
-  contactEmail: 'https://formspree.io/f/mnppvynn',
+  // Public contact email
+  contactEmail: 'hello@nexoravoice.com',
 
-  // Booking page, e.g. 'https://calendly.com/your-name/discovery-call'
-  // When set, every "Book a Demo" button opens it in a new tab.
-  // When empty, those buttons scroll to the contact form.
+  // Booking page
   schedulingUrl: '',
 
-  // Live demo phone line, e.g. '+1 (555) 010-0000'. Shown as a "Call the demo" button.
+  // Live demo phone line
   demoPhoneNumber: '',
 
-  // Recorded sample call, e.g. 'assets/sample-call.mp3' (keep it under ~2 MB).
+  // Recorded sample call
   demoAudioUrl: 'riverbend-demo.mp3',
 
-  // Form backend URL that accepts a POST, e.g. 'https://formspree.io/f/abcdwxyz'
-  // or '/api/contact' if you add a Cloudflare Pages Function. See README.md.
-  formEndpoint: 'https://formspree.io/f/mnppvynn'
+  // Formspree endpoint
+  formEndpoint: 'https://formspree.io/f/xkjjvlra'
 };
 
 /* ============================================================= */
